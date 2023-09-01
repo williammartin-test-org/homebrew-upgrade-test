@@ -1,0 +1,25 @@
+name: Deployment
+
+permissions:
+  contents: write
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        required: true
+        type: string
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Bump homebrew-core formula
+        uses: mislav/bump-homebrew-formula-action@v2
+        with:
+          formula-name: gh
+          tag-name: ${{ inputs.tag_name }}
+          push-to: cli/homebrew-core
+        env:
+          COMMITTER_TOKEN: ${{ secrets.HOMEBREW_PR_PAT }}
+
